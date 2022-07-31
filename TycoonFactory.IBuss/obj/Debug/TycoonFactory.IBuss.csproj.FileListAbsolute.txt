@@ -1,0 +1,11 @@
+D:\Practical\Ryanair\TycoonFactory\TycoonFactory.IBuss\bin\Debug\TycoonFactory.IBuss.dll
+D:\Practical\Ryanair\TycoonFactory\TycoonFactory.IBuss\bin\Debug\TycoonFactory.IBuss.pdb
+D:\Practical\Ryanair\TycoonFactory\TycoonFactory.IBuss\bin\Debug\TycoonFactory.Db.dll
+D:\Practical\Ryanair\TycoonFactory\TycoonFactory.IBuss\bin\Debug\TycoonFactory.IData.dll
+D:\Practical\Ryanair\TycoonFactory\TycoonFactory.IBuss\bin\Debug\TycoonFactory.Db.pdb
+D:\Practical\Ryanair\TycoonFactory\TycoonFactory.IBuss\bin\Debug\TycoonFactory.IData.pdb
+D:\Practical\Ryanair\TycoonFactory\TycoonFactory.IBuss\obj\Debug\TycoonFactory.IBuss.csproj.AssemblyReference.cache
+D:\Practical\Ryanair\TycoonFactory\TycoonFactory.IBuss\obj\Debug\TycoonFactory.IBuss.csproj.CoreCompileInputs.cache
+D:\Practical\Ryanair\TycoonFactory\TycoonFactory.IBuss\obj\Debug\TycoonFactory.IBuss.csproj.CopyComplete
+D:\Practical\Ryanair\TycoonFactory\TycoonFactory.IBuss\obj\Debug\TycoonFactory.IBuss.dll
+D:\Practical\Ryanair\TycoonFactory\TycoonFactory.IBuss\obj\Debug\TycoonFactory.IBuss.pdb

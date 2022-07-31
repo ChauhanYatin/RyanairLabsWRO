@@ -1,0 +1,48 @@
+﻿@model TycoonFactory.Web.Models.WorkerViewModel
+@{
+    ViewBag.Title = "Home Page";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style type="text/css">
+    .table-bordered tr th {
+        background: #ddd;
+    }
+    .table-bordered tr td {
+        border-bottom: 1px solid #ddd;
+        border-right: 1px solid #ddd;
+        padding: 5px;
+    }
+</style>
+<div class="row">
+    <h2>Top Worker List</h2>
+    <div class="col-md-12">
+        <table id="tblWorker" class="table table-bordered table-responsive table-hover">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>WorkerName</th>
+                    <th>Total Duration (Hours)</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+@Scripts.Render("~/bundles/jquery")
+<script type="text/javascript">
+    $(document).ready(function () {
+        GetWorkers();
+    });
+    function GetWorkers() {
+        $.get('/Home/GetTopWorkers', {}, function (data) {
+            var tblWorker = $("#tblWorker");
+            $.each(data, function (index, item) {
+                var tr = $("<tr></tr>");
+                tr.html(("<td>" + item.SrNo + "</td>")
+                    + " " + ("<td>" + item.WorkerName + "</td>")
+                    + " " + ("<td>" + item.TotalDurationHHMM + "</td>"));
+                tblWorker.append(tr);
+            });
+        });
+    }
+</script>

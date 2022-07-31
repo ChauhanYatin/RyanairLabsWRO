@@ -1,0 +1,6 @@
+D:\Practical\Ryanair\TycoonFactory\TycoonFactory.Utility\bin\Debug\TycoonFactory.Utility.dll
+D:\Practical\Ryanair\TycoonFactory\TycoonFactory.Utility\bin\Debug\TycoonFactory.Utility.pdb
+D:\Practical\Ryanair\TycoonFactory\TycoonFactory.Utility\obj\Debug\TycoonFactory.Utility.csproj.AssemblyReference.cache
+D:\Practical\Ryanair\TycoonFactory\TycoonFactory.Utility\obj\Debug\TycoonFactory.Utility.csproj.CoreCompileInputs.cache
+D:\Practical\Ryanair\TycoonFactory\TycoonFactory.Utility\obj\Debug\TycoonFactory.Utility.dll
+D:\Practical\Ryanair\TycoonFactory\TycoonFactory.Utility\obj\Debug\TycoonFactory.Utility.pdb

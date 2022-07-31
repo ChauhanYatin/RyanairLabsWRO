@@ -1,0 +1,8 @@
+D:\Practical\Ryanair\TycoonFactory\TycoonFactory.Db\bin\Debug\TycoonFactory.Db.dll
+D:\Practical\Ryanair\TycoonFactory\TycoonFactory.Db\bin\Debug\TycoonFactory.Db.pdb
+D:\Practical\Ryanair\TycoonFactory\TycoonFactory.Db\bin\Debug\System.ValueTuple.dll
+D:\Practical\Ryanair\TycoonFactory\TycoonFactory.Db\obj\Debug\TycoonFactory.Db.csproj.AssemblyReference.cache
+D:\Practical\Ryanair\TycoonFactory\TycoonFactory.Db\obj\Debug\TycoonFactory.Db.csproj.CoreCompileInputs.cache
+D:\Practical\Ryanair\TycoonFactory\TycoonFactory.Db\obj\Debug\TycoonFactory.Db.csproj.CopyComplete
+D:\Practical\Ryanair\TycoonFactory\TycoonFactory.Db\obj\Debug\TycoonFactory.Db.dll
+D:\Practical\Ryanair\TycoonFactory\TycoonFactory.Db\obj\Debug\TycoonFactory.Db.pdb

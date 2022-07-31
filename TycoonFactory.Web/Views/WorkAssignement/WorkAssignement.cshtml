@@ -1,0 +1,392 @@
+﻿@using TycoonFactory.Utility; 
+@{
+    ViewBag.Title = "WorkAssignement";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="col-md-12">
+    <h2>WorkAssignement</h2>
+    <button type="button" id="btnnew" class="btn btn-success pull-left">Assign New WorkAssignment</button>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div id="calender"></div>
+    </div>
+</div>
+
+<div id="viewWorkAssignment" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title"><span id="workerName">Worker Details</span></h4>
+            </div>
+            <div class="modal-body">
+                <button id="btnDelete" class="btn btn-default btn-sm pull-right">
+                    <span class="glyphicon glyphicon-remove"></span> Remove
+                </button>
+                <button id="btnEdit" class="btn btn-default btn-sm pull-right" style="margin-right:5px;">
+                    <span class="glyphicon glyphicon-pencil"></span> Edit
+                </button>
+                <p id="pDetails"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="saveWorkAssignment" class="modal fade" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Edit Work Assignment</h4>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="hdWorkAssignementId" value="0" />
+                <div class="form-group">
+                    <label>WorkType</label>
+                    <select id="ddlWorkType" class="form-control">
+                        <option value="">Select</option>
+                        <option value="Component">Component</option>
+                        <option value="Machine">Machine</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>WorkerName : </label>
+                    <input type="text" id="txtworkername" class="form-control hide" />
+                    <select id="ddlWorkerName" class="form-control">
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>StartTime</label>
+                    <div class="input-group date" id="dtp1" style="display: -webkit-box">
+                        <input type="text" id="txtStartdatetime" class="form-control" />
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>EndTime</label>
+                    <div class="input-group date" id="dtp2" style="display: -webkit-box">
+                        <input type="text" id="txtEnddatetime" class="form-control" />
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="txtDescription" rows="3" class="form-control"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btnSave" class="btn btn-success">Save</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts{
+    @Scripts.Render("~/bundles/calendar")
+<script type="text/javascript">
+        $(document).ready(function () {
+
+            var works = [];
+            var selectedWork = null;
+            FetchWorkAssigmentAndRenderCalendar();
+
+            function FetchWorkAssigmentAndRenderCalendar() {
+                works = [];
+                $.ajax({
+                    type: "GET",
+                    url: "/WorkAssignement/GetWorkAssignementList",
+                    success: function (data) {
+                        $.each(data, function (i, v) {
+                            works.push({
+                                workassignementId: v.WorkAssignementId,
+                                title: v.WorkerName,
+                                workerId: v.WorkerId,
+                                workername: v.WorkerName,
+                                worktype: v.WorkType,
+                                description: v.Description,
+                                start: moment(v.Startdatetime),
+                                end: moment(v.Enddatetime),
+                                backgroundColor: "#9501fc",
+                                borderColor: "#fc0101"
+                            });
+                        })
+                        GenerateCalender(works);
+                    },
+                    error: function (error) {
+                        alert('@Common.Status.Failed');
+                    }
+                })
+            }
+
+            function GenerateCalender(works) {
+                console.log(works);
+                $('#calender').fullCalendar('destroy');
+                $('#calender').fullCalendar({
+                    defaultView: 'month',
+                    header: {
+                        left: 'prev,next today',
+                        center: 'title',
+                        right: 'agendaDay,agendaWeek,month,listWeek,year'
+                    },
+                    buttonText: {
+                        today: 'today',
+                        month: 'month',
+                        week: 'week',
+                        day: 'day'
+                    },
+                    timeFormat: 'h(:mm)a',
+                    eventColor: '#378006',
+                    events: works,
+                    editable: true,
+                    selectable: true,
+                    eventClick: function (calEvent, jsEvent, view) {
+                        selectedWork = calEvent;
+                        var $description = $('<div/>');
+                        $description.append($('<p/>').html('<b>WorkerName : </b>' + calEvent.workername));
+                        $description.append($('<p/>').html('<b>WorkType : </b>' + calEvent.worktype));
+                        $description.append($('<p/>').html('<b>StartTime : </b>' + calEvent.start.format("DD-MMM-YYYY HH:mm a")));
+                        $description.append($('<p/>').html('<b>EndTime : </b>' + calEvent.end.format("DD-MMM-YYYY HH:mm a")));
+                        if (calEvent.description != null) {
+                            $description.append($('<p/>').html('<b>Description : </b>' + calEvent.description));
+                        }
+                        $('#viewWorkAssignment #pDetails').empty().html($description);
+                        $('#viewWorkAssignment').modal();
+                    },
+                });
+            }
+
+            $('#btnEdit').click(function () {
+                openAddEditForm();
+            })
+
+            $('#btnDelete').click(function () {
+                alert(selectedWork.workassignementId);
+                if (selectedWork != null && confirm('Are you sure you want to delete?')) {
+                    $.ajax({
+                        type: "POST",
+                        url: '/WorkAssignement/DeleteWorkAssignement',
+                        data: { 'workassignementId': selectedWork.workassignementId },
+                        success: function (data) {
+                            if (data.returnStatus == '@Common.Status.Success') {
+                                FetchWorkAssigmentAndRenderCalendar();
+                                $('#viewWorkAssignment').modal('hide');
+                            }
+                        },
+                        error: function () {
+                            alert('@Common.Status.Failed');
+                        }
+                    })
+                }
+            })
+
+            $('#dtp1,#dtp2').datetimepicker({
+                format: 'DD/MM/YYYY HH:mm A'
+            });
+
+            function openAddEditForm() {
+                getWorkerList();
+                if (selectedWork != null) {
+                    $('#hdWorkAssignementId').val(selectedWork.workassignementId);
+                    $('#txtworkername').val(selectedWork.workername);
+                    $("#ddlWorkerName").val('1');
+                    $('#ddlWorkType').val(selectedWork.worktype);
+                    $('#txtStartdatetime').val(selectedWork.start.format('DD/MM/YYYY HH:mm A'));
+                    $('#txtEnddatetime').val(selectedWork.end != null ? selectedWork.end.format('DD/MM/YYYY HH:mm A') : '');
+                    $('#txtDescription').val(selectedWork.description);
+                }
+                $('#viewWorkAssignment').modal('hide');
+                $('#saveWorkAssignment').modal();
+            }
+
+            $("#btnnew").click(function () {
+                newWorkAssignment();
+            });
+
+            $("#btnSave").click(function () {
+
+                var WorkerId = 0;
+                var WorkType = '';
+                var WorkerNameval = [];
+                var WorkerNameText = [];
+
+                if ($('#ddlWorkType').val().trim() == "") {
+                    alert('WorkType required');
+                    return false;
+                }
+                WorkType = $('#ddlWorkType').val().trim();
+
+                if (WorkType == 'Component') {
+                    if ($('#ddlWorkerName').val().trim() == "-1" || $('#ddlWorkerName').val().trim() == "") {
+                        alert('WorkerName required');
+                        return false;
+                    }
+                    WorkerNameval = $('#ddlWorkerName').val().trim();
+                    WorkerNameText = $('#ddlWorkerName option:selected').text();
+                }
+                else {
+                    $("#ddlWorkerName option:selected").each(function () {
+                        WorkerNameval.push(this.value);
+                        WorkerNameText.push(this.text);
+                    });
+                    if (WorkerNameval == '-1' || WorkerNameText == 'Select') {
+                        alert('WorkerName required');
+                        return false;
+                    }
+                    else {
+                        WorkerNameval.join(',');
+                        WorkerNameText.join(',');
+                    }
+                }
+
+                if ($('#txtStartdatetime').val().trim() == "") {
+                    alert('Start datetime required');
+                    return false;
+                }
+
+                if ($('#txtEnddatetime').val().trim() == "") {
+                    alert('End datetime required');
+                    return false;
+                }
+
+                var startDate = moment($('#txtStartdatetime').val(), "DD/MM/YYYY HH:mm A").toDate();
+                var endDate = moment($('#txtEnddatetime').val(), "DD/MM/YYYY HH:mm A").toDate();
+                if (startDate > endDate) {
+                    alert('End datetime should be grater then Start datetime.');
+                    return false;
+                }
+
+                if (WorkerId != "0" && WorkType != '') {
+                    $.ajax({
+                        type: "POST",
+                        url: "/WorkAssignement/ValidateWorkAssignment",
+                        data: { 'WorkAssignementId': $('#hdWorkAssignementId').val(), 'WorkerId': WorkerNameval, 'WorkType': WorkType, 'startDate': $('#txtStartdatetime').val(), 'endDate': $('#txtEnddatetime').val() },
+                        success: function (data) {
+                            if (data == "FAILED") {
+                                if (WorkType == '@Common.WorkType.Component') {
+                                    alert('Worker need to take rest for 2 hour to assign new work.');
+                                    return false;
+                                }
+                                else if (WorkType == '@Common.WorkType.Machine') {
+                                    alert('Worker need to take rest for 4 hour to assign new work.');
+                                    return false;
+                                }
+                            }
+                            else {
+                                var data = {
+                                    WorkAssignementId: $('#hdWorkAssignementId').val(),
+                                    title: $('#ddlWorkerName').val(),
+                                    SelectedWorkerId: WorkerNameval,
+                                    WorkerName: WorkerNameText,
+                                    WorkType: $('#ddlWorkType').val(),
+                                    Description: $('#txtDescription').val().trim(),
+                                    Startdatetime: $('#txtStartdatetime').val().trim(),
+                                    Enddatetime: $('#txtEnddatetime').val().trim(),
+                                }
+                                SaveWorkAssignment(data);
+                            }
+                        },
+                        error: function (error) {
+                            alert('@Common.Status.Failed');
+                            return false;
+                        }
+                    });
+                }
+            });
+
+            function SaveWorkAssignment(data) {
+                $.ajax({
+                    type: "POST",
+                    url: '/WorkAssignement/SaveWorkAssignment',
+                    data: data,
+                    success: function (data) {
+                        if (data.returnStatus == '@Common.Status.Success') {
+                            FetchWorkAssigmentAndRenderCalendar();
+                            $('#saveWorkAssignment').modal('hide');
+                        }
+                    },
+                    error: function () {
+                        alert('@Common.Status.Failed');
+                    }
+                })
+            }
+
+            function newWorkAssignment() {
+                $('#hdWorkAssignementId').val(0);
+                $("#ddlWorkType").val('');
+                getWorkerList();
+                $('#ddlWorkerName').removeAttr('multiple');
+                $('#saveWorkAssignment').modal();
+            }
+
+            function getWorkerList() {
+                $.ajax({
+                    type: "GET",
+                    url: "/Home/GetWorkerList",
+                    success: function (data) {
+                        $("#ddlWorkerName").html('');
+                        var s = '<option value="-1">Select</option>';
+                        for (var i = 0; i < data.length; i++) {
+                            s += '<option value="' + data[i].Id + '">' + data[i].Name + '</option>';
+                        }
+                        $("#ddlWorkerName").html(s);
+                    },
+                    error: function (error) {
+                        alert('@Common.Status.Failed');
+                    }
+                })
+            }
+
+            function ValidateWorkAssignment(WorkerId, WorkType, startDate, endDate) {
+                $.ajax({
+                    type: "POST",
+                    url: "/WorkAssignement/ValidateWorkAssignment",
+                    data: { 'WorkerId': WorkerId, 'WorkType': WorkType, 'startDate': startDate, 'endDate': endDate },
+                    success: function (data) {
+                        if (data == "FAILED") {
+                            if (WorkType.toUpperCase() == '@Common.WorkType.Component') {
+                                alert('Worker need to take rest for 2 hour to assign new work.');
+                            }
+                            else if (WorkType.toUpperCase() == '@Common.WorkType.Machine') {
+                                alert('Worker need to take rest for 4 hour to assign new work.');
+                            }
+                            return false;
+                        }
+                        else {
+                            return true;
+                        }
+                    },
+                    error: function (error) {
+                        alert('@Common.Status.Failed');
+                        return false;
+                    }
+                });
+            }
+
+            $("#ddlWorkType").change(function () {
+                if ($(this).val() == '@Common.WorkType.Machine') {
+                    $('#ddlWorkerName').attr('multiple', 'multiple');
+                } else {
+                    $('#ddlWorkerName').removeAttr('multiple');
+                }
+            });
+
+            $("#select-values").click(function () {
+                var val = [];
+            });
+        });
+</script>
+}
+
+
